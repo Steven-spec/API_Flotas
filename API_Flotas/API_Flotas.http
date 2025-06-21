@@ -1,0 +1,6 @@
+@API_Flotas_HostAddress = http://localhost:5142
+
+GET {{API_Flotas_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

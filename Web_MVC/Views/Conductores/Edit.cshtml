@@ -1,0 +1,110 @@
+﻿@model API_Flotas.Models.Conductor
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Conductor</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Id" class="control-label"></label>
+                <input asp-for="Id" class="form-control" />
+                <span asp-validation-for="Id" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Nombre" class="control-label"></label>
+                <input asp-for="Nombre" class="form-control" />
+                <span asp-validation-for="Nombre" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Licencia" class="control-label"></label>
+                <input asp-for="Licencia" class="form-control" />
+                <span asp-validation-for="Licencia" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FechaVencimiento" class="control-label"></label>
+                <input asp-for="FechaVencimiento" class="form-control" />using Microsoft.AspNetCore.Mvc;
+                using API_Flotas.Models;
+                using Microsoft.EntityFrameworkCore;
+
+                [ApiController]
+                [Route("api/[controller]")]
+                public class ConductoresController : ControllerBase
+                {
+                private readonly AppDbContext _context;
+
+                public ConductoresController(AppDbContext context)
+                {
+                _context = context;
+                }
+
+                [HttpGet]
+                public async Task<ActionResult<IEnumerable<Conductor>>> GetConductores()
+    {
+        return await _context.Conductores.ToListAsync();
+    }
+
+    [HttpGet("{id}")]
+    public async Task<ActionResult<Conductor>> GetConductor(int id)
+    {
+        var conductor = await _context.Conductores.FindAsync(id);
+        if (conductor == null)
+            return NotFound();
+
+        return conductor;
+    }
+
+    [HttpPost]
+    public async Task<ActionResult<Conductor>> PostConductor(Conductor conductor)
+    {
+        _context.Conductores.Add(conductor);
+        await _context.SaveChangesAsync();
+        return CreatedAtAction(nameof(GetConductor), new { id = conductor.Id }, conductor);
+    }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> PutConductor(int id, Conductor conductor)
+    {
+        if (id != conductor.Id)
+            return BadRequest();
+
+        _context.Entry(conductor).State = EntityState.Modified;
+        await _context.SaveChangesAsync();
+        return NoContent();
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteConductor(int id)
+    {
+        var conductor = await _context.Conductores.FindAsync(id);
+        if (conductor == null)
+            return NotFound();
+
+        _context.Conductores.Remove(conductor);
+        await _context.SaveChangesAsync();
+        return NoContent();
+    }
+}
+
+                <span asp-validation-for="FechaVencimiento" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
